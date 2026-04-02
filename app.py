@@ -62,15 +62,24 @@ st.markdown(f'''
 ''', unsafe_allow_html=True)
 
 def render_row(title, items):
-    if show_titles:
-        st.markdown(f"<b>{title}</b>", unsafe_allow_html=True)
 
-    blocks = ""
+    if show_titles:
+        st.markdown(f"### {title}")
+
+    html = f"""
+    <div style="
+        display:flex;
+        width:100%;
+        overflow:hidden;
+        border-radius:{border_radius}px;
+        margin-bottom:15px;
+    ">
+    """
 
     for item in items:
         text_color = "#000" if item["hex"] in ["#FFFFFF", "#F5F5DC"] else "#FFF"
 
-        blocks += f'''
+        html += f"""
         <div style="
             flex:1;
             background:{item['hex']};
@@ -84,19 +93,11 @@ def render_row(title, items):
         ">
             {item['color'] if show_labels else ""}
         </div>
-        '''
+        """
 
-    st.markdown(f'''
-    <div style="
-        display:flex;
-        width:100%;
-        overflow:hidden;
-        border-radius:{border_radius}px;
-        margin-bottom:15px;
-    ">
-        {blocks}
-    </div>
-    ''', unsafe_allow_html=True)
+    html += "</div>"
+
+    st.markdown(html, unsafe_allow_html=True)
 
 render_row("Smart Shirts", results["smart_shirts"])
 render_row("Smart Pants", results["smart_pants"])
